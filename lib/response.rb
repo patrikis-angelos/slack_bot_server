@@ -6,9 +6,8 @@ class Response
     month = time.strftime("%B")
     @response =
     "HTTP/1.1 200 OK\r\n" +
-    "Date: #{day[0..2]}, #{time.day} #{month[0..2]} #{time.year} #{time.strftime("%k").to_i - 2}:#{time.strftime("%M")}:#{time.strftime("%S")} GMT\r\n" +
     "Content-type: text/plain\r\n" +
-    "\r\n" + 
+    "\r\n" +
     "#{data['challenge']}\r\n"
   end
 
@@ -16,3 +15,5 @@ class Response
     client.write(@response)
   end
 end
+
+#"Date: #{day[0..2]}, #{time.day} #{month[0..2]} #{time.year} #{time.strftime("%k").to_i}:#{time.strftime("%M")}:#{time.strftime("%S")} GMT\r\n" +

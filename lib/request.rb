@@ -15,8 +15,12 @@ class Request
   end
 
   def parse_body
-    b = request.lines[-1]
-    @body = JSON.parse(b)
+    if @head[:headers][:ContentType] == "application/json"
+      b = request.lines[-1]
+      @body = JSON.parse(b)
+    else
+      @body = request.lines[-1]
+    end
   end
 
   private
