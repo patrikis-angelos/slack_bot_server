@@ -1,5 +1,5 @@
 class Request
-  attr_reader :request
+  attr_reader :request, :head, :body
 
   def initialize(request)
     @request = request
@@ -7,7 +7,7 @@ class Request
 
   def parse
   method, path, version = request.lines[0].split
-  {
+  @head = {
     path: path,
     method: method,
     headers: parse_headers(request)
@@ -16,8 +16,7 @@ class Request
 
   def parse_body
     b = request.lines[-1]
-    body = JSON.parse(b)
-    return body
+    @body = JSON.parse(b)
   end
 
   private
@@ -35,6 +34,6 @@ class Request
   end
 
   def normalize(header)
-    header.gsub(":", "").downcase.to_sym
+    header.gsub(/[:-]/, "").to_sym
   end
 end
