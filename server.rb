@@ -8,31 +8,12 @@ require 'json'
 
 require_relative 'lib/response'
 require_relative 'lib/request'
+require_relative 'lib/bot'
 
 Dotenv.load
 
-def take_action(action, params)
-  action = URI "https://slack.com/api/#{action}"
-  send_query(action, params)
-end
+bot = Bot.new
+bot.run
 
-def send_query(action, params)
-  action.query = URI.encode_www_form(params)
-  response = Net::HTTP.get_response(action)
-end
-
-server = TCPServer.new('localhost', 3000)
-
-loop {
-  client = server.accept
-  request = client.readpartial(2048)
-  request = Request.new(request)
-  request.parse
-  request.parse_body
-  # puts request.head[:headers][:ContentType]
-  # puts request.body
-  response = Response.new(200, request.body)
-  puts response.response
-  response.send(client)
-  client.close
-}
+# params = { token: ENV['SLACK_API_TOKEN'], channel: data.channel, text: 'Hello', as_user: true }
+# client.take_action('chat.postMessage', params)
