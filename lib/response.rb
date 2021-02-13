@@ -1,8 +1,8 @@
 class Response
   attr_reader :response
-  def constract_response(data = "")
+  def constract_response(code, data = "")
     @response = 
-    "HTTP/1.1 200 OK\r\n" +
+    "HTTP/1.1 #{code}\r\n" +
     "Content-type: text/plain\r\n" +
     "\r\n"
     if (data["type"] == "url_verification")
