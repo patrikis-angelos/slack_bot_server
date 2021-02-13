@@ -1,33 +1,33 @@
 class Request
-  attr_reader :request, :head, :body
+  attr_reader :raw_request, :head, :body
 
-  def initialize(request)
-    @request = request
+  def initialize(raw_request)
+    @raw_request = raw_request
   end
 
   def parse
-  method, path, version = request.lines[0].split
-  @head = {
-    path: path,
-    method: method,
-    headers: parse_headers(request)
-  }
+    method, path, version = raw_request.lines[0].split
+    @head = {
+      path: path,
+      method: method,
+      headers: parse_headers(raw_request)
+    }
   end
 
   def parse_body
     if @head[:headers][:ContentType] == "application/json"
-      b = request.lines[-1]
+      b = raw_request.lines[-1]
       @body = JSON.parse(b)
     else
-      @body = request.lines[-1]
+      @body = raw_request.lines[-1]
     end
   end
 
   private
 
-  def parse_headers(request)
+  def parse_headers(raw_request)
     headers = {}
-    request.lines[1..-1].each_with_index do |line, i|
+    raw_request.lines[1..-1].each_with_index do |line, i|
       if line == "\r\n"
         return headers
       end
