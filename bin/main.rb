@@ -6,9 +6,9 @@ require 'date'
 require 'net/http'
 require 'json'
 
-require_relative 'lib/response'
-require_relative 'lib/request'
-require_relative 'lib/bot'
+require_relative '../lib/response'
+require_relative '../lib/request'
+require_relative '../lib/bot'
 
 Dotenv.load
 

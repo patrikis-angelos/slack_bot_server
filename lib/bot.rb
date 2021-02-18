@@ -9,7 +9,6 @@ class Bot
 
   def run
     server = TCPServer.new('localhost', 3000)
-    puts @commands
 
     loop {
       client = server.accept
@@ -20,13 +19,24 @@ class Bot
       request.parse_body
 
       response = Response.new
-      if authenticate(request)
-        response.constract_response(200, request.body)
-        if @commands.any?(request.body['event']['text'].to_sym)
-          send(request.body['event']['text'].to_sym, request.body)
-        end
-      else
+
+      if !authenticate(request)
         response.constract_response(403)
+        response.send(client)
+        client.close
+        next
+      end
+
+      if request.body['type'] == 'url_verification'
+        response.constract_response(200, request.body)
+        response.send(client)
+        client.close
+        next
+      end
+
+      response.constract_response(200)
+      if @commands.any?(request.body['event']['text'].to_sym)
+        send(request.body['event']['text'].to_sym, request.body)
       end
       response.send(client)
       client.close
